@@ -3,153 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONVERSOR DE CORES</title>
+    <title>Laboratório de Cores</title>
     <style>
+        :root {
+            --bg-color: #e9ecef;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --accent-color: #4a90e2;
+            --text-main: #2d3436;
+            --text-secondary: #636e72;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            background: #f0f2f5;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #ffffff, #e9ecef);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .box {
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 5px solid white;
+        h1 {
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
         }
 
-        .main-control {
-            background: white;
-            display: inline-block;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        /* Preview de Cor Principal */
+        .color-preview-container {
+            position: relative;
             margin-bottom: 30px;
         }
 
+        .main-box {
+            width: 220px;
+            height: 220px;
+            border-radius: 30px;
+            background: white;
+            box-shadow: 20px 20px 60px #c7cacd, -20px -20px 60px #ffffff;
+            transition: 0.3s ease;
+            border: 8px solid white;
+        }
+
+        /* Painel Central de Controle */
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
         input[type="color"] {
-            width: 80px;
-            height: 40px;
+            -webkit-appearance: none;
             border: none;
+            width: 60px;
+            height: 60px;
             cursor: pointer;
             background: none;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .rgb-display {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch {
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Estilo para os campos somente leitura */
-        .readonly-input {
-            width: 50px;
-            padding: 8px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            background: #fdfdfd;
-            color: #666;
-            text-align: center;
-            font-weight: bold;
-            outline: none;
-            cursor: default;
-        }
-
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            width: 160px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .card h3 {
-            margin: 0 0 10px 0;
-            font-size: 13px;
-            color: #888;
+        .input-label {
+            font-size: 0.75rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        .value {
-            font-weight: bold;
-            font-family: monospace;
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: #333;
+        .rgb-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
         }
 
-        button {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
+        .readonly-field {
+            width: 60px;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 10px 0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        /* Grid de Cartões de Formato */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .format-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .format-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .format-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+        }
+
+        .format-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            display: block;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.75rem;
             cursor: pointer;
-            background: #4CAF50;
-            color: white;
-            font-size: 12px;
-            transition: 0.2s;
+            transition: all 0.2s;
+            font-weight: 600;
         }
 
-        button:hover { background: #45a049; }
+        .copy-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Notificação simples */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🎨 Conversor de Cores</h1>
+    <h1>Paleta Digital Dinâmica</h1>
 
-    <div class="box" id="box"></div>
+    <div class="color-preview-container">
+        <div class="main-box" id="box"></div>
+    </div>
 
-    <div class="main-control">
+    <div class="glass-panel">
         <input type="color" id="picker" value="#003cff">
-        <div style="font-weight: bold; color: #444;">RGB (Leitura)</div>
-        <div class="rgb-display">
-            <input id="r" class="readonly-input" type="text" readonly>
-            <input id="g" class="readonly-input" type="text" readonly>
-            <input id="b" class="readonly-input" type="text" readonly>
+        <div class="input-label">Entrada RGB</div>
+        <div class="rgb-group">
+            <input id="r" class="readonly-field" type="text" readonly title="Red">
+            <input id="g" class="readonly-field" type="text" readonly title="Green">
+            <input id="b" class="readonly-field" type="text" readonly title="Blue">
         </div>
     </div>
 
-    <div class="container">
-        <div class="card">
+    <div class="results-grid">
+        <div class="format-card">
             <h3>RGB</h3>
-            <div class="value" id="rgbText"></div>
-            <button onclick="copy('rgbText')">Copiar</button>
+            <span class="format-value" id="rgbText"></span>
+            <button class="copy-btn" onclick="copy('rgbText')">COPIAR</button>
         </div>
-        <div class="card">
-            <h3>HEX</h3>
-            <div class="value" id="hexText"></div>
-            <button onclick="copy('hexText')">Copiar</button>
+        <div class="format-card">
+            <h3>HEXADECIMAL</h3>
+            <span class="format-value" id="hexText"></span>
+            <button class="copy-btn" onclick="copy('hexText')">COPIAR</button>
         </div>
-        <div class="card">
+        <div class="format-card">
             <h3>HSL</h3>
-            <div class="value" id="hslText"></div>
-            <button onclick="copy('hslText')">Copiar</button>
+            <span class="format-value" id="hslText"></span>
+            <button class="copy-btn" onclick="copy('hslText')">COPIAR</button>
         </div>
-        <div class="card">
+        <div class="format-card">
             <h3>HSV</h3>
-            <div class="value" id="hsvText"></div>
-            <button onclick="copy('hsvText')">Copiar</button>
+            <span class="format-value" id="hsvText"></span>
+            <button class="copy-btn" onclick="copy('hsvText')">COPIAR</button>
         </div>
-        <div class="card">
+        <div class="format-card">
             <h3>CMYK</h3>
-            <div class="value" id="cmykText"></div>
-            <button onclick="copy('cmykText')">Copiar</button>
+            <span class="format-value" id="cmykText"></span>
+            <button class="copy-btn" onclick="copy('cmykText')">COPIAR</button>
         </div>
     </div>
+
+    <div id="toast">Copiado para a área de transferência!</div>
 
     <script>
         const box = document.getElementById("box");
@@ -157,6 +235,7 @@
         const rOut = document.getElementById("r");
         const gOut = document.getElementById("g");
         const bOut = document.getElementById("b");
+        const toast = document.getElementById("toast");
 
         function rgbToHsl(r, g, b) {
             r /= 255; g /= 255; b /= 255;
@@ -207,35 +286,32 @@
             const g = parseInt(hex.substr(3, 2), 16);
             const b = parseInt(hex.substr(5, 2), 16);
 
-            // Atualiza campos de leitura
             rOut.value = r;
             gOut.value = g;
             bOut.value = b;
-
-            // Atualiza visual
             box.style.backgroundColor = hex;
 
-            // Conversões
             const hsl = rgbToHsl(r, g, b);
             const hsv = rgbToHsv(r, g, b);
             const cmyk = rgbToCmyk(r, g, b);
 
-            // Atualiza textos
             document.getElementById("rgbText").innerText = `rgb(${r}, ${g}, ${b})`;
             document.getElementById("hexText").innerText = hex.toUpperCase();
             document.getElementById("hslText").innerText = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
             document.getElementById("hsvText").innerText = `hsv(${hsv[0]}, ${hsv[1]}%, ${hsv[2]}%)`;
-            document.getElementById("cmykText").innerText = `cmyk(${cmyk.join(", ")})`;
+            document.getElementById("cmykText").innerText = `${cmyk[0]}%, ${cmyk[1]}%, ${cmyk[2]}%, ${cmyk[3]}%`;
         }
 
         picker.addEventListener("input", update);
 
         function copy(id) {
             const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text).then(() => alert("Copiado!"));
+            navigator.clipboard.writeText(text).then(() => {
+                toast.style.opacity = "1";
+                setTimeout(() => toast.style.opacity = "0", 2000);
+            });
         }
 
-        // Início
         update();
     </script>
 </body>
